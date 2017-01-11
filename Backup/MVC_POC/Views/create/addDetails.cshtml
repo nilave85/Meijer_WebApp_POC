@@ -1,0 +1,141 @@
+﻿@model MVC_POC.Models.createModel
+@using MVC_POC.Models
+@{
+    ViewBag.Title = "addDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add Details</h2>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script language="javascript" type="text/javascript">
+    function GetCity(_stateId) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ddlcity").html(procemessage).show();
+        var url = "/create/GetCityByStaeId/";
+
+        $.ajax({
+            url: url,
+            data: { stateid: _stateId },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                var markup = "<option value='0'>Select City</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+                }
+                $("#ddlcity").html(markup).show();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+
+    }
+</script>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <table align="center" >
+            <tr style="text-align:center"><td colspan="2" >Create Details</td></tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m=>m.FirstName)
+                </td>
+                <td>
+                    @Html.TextBoxFor(m=>m.FirstName)
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(m=>m.FirstName)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m=>m.LastName)
+                </td>
+                <td>
+                    @Html.TextBoxFor(m=>m.LastName)
+                </td>
+                 <td>
+                    @Html.ValidationMessageFor(m=>m.LastName)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m=>m.Age)
+                </td>
+                <td>
+                    @Html.TextBoxFor(m=>m.Age)
+                </td>
+                 <td>
+                    @Html.ValidationMessageFor(m=>m.Age)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m=>m.Dob)
+                </td>
+                <td>
+                    @Html.TextBoxFor(m=>m.Dob)
+                </td>
+                 <td>
+                    @Html.ValidationMessageFor(m=>m.Dob)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m=>m.Address)
+                </td>
+                <td>
+                    @Html.TextBoxFor(m=>m.Address)
+                </td>
+                 <td>
+                    @Html.ValidationMessageFor(m=>m.Address)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m=>m.Country)
+                </td>
+                <td>
+                   @* @Html.TextBoxFor(m=>m.Country)*@
+                    @Html.DropDownListFor(m => m.SelectedCntry, new SelectList(Model.Country, "Id", "countryName"), new { @id = "ddlstate", @style = "width:200px;", @onchange = "javascript:GetCity(this.value);" })
+                </td>
+                 <td>
+                    @Html.ValidationMessageFor(m=>m.SelectedCntry)
+                </td>
+            </tr>
+              <tr>
+                <td>
+                    @Html.LabelFor(m=>m.State)
+                </td>
+                <td>
+                    @*@Html.TextBoxFor(m=>m.State)*@
+                    <select id="ddlcity" name="ddlcity" style="width: 200px">
+
+                    </select>
+                    
+                </td>
+                   <td>
+                    @Html.ValidationMessageFor(m=>m.State)
+                </td>
+            </tr>
+              <tr>
+                <td>
+                    @Html.LabelFor(m=>m.Gender)
+                </td>
+                <td>
+                   Male:-@Html.RadioButtonFor(m=>m.Gender,GenderEnum.MALE)
+                    Female:-@Html.RadioButtonFor(m=>m.Gender,GenderEnum.FEMALE)                                   
+                </td>
+                   <td>
+                    @Html.ValidationMessageFor(m=>m.Gender)
+                </td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Create" />  </td>
+                <td>  </td>
+            </tr>
+
+        </table>
+}
